@@ -11,8 +11,8 @@ import (
 type Operation interface {
 	Connect(connectMsg model.DbConnectMessage) (*sql.DB, error) // 连接数据库
 	Query(sql string, params ...interface{}) (*model.DbQueryModel, error) // 查询
-	Update(sql string, params ...interface{}) (int, error) // 更新
-	Delete(sql string, params ...interface{}) (int, error) // 删除
-	Insert(sql string, params ...interface{}) (int, error) // 新增
-	Close(db *sql.DB) // 关闭数据库连接
+	Update(sql string, params ...interface{}) (int64, error) // 更新
+	Delete(sql string, params ...interface{}) (int64, error) // 删除
+	Insert(sql string, params ...interface{}) (int64, error) // 新增
+	Close() // 关闭数据库连接
 }
