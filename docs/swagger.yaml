@@ -1,0 +1,78 @@
+basePath: /
+definitions:
+  model.ConnectMessage:
+    properties:
+      charset:
+        description: 编码
+        type: string
+      database:
+        description: 数据库名称
+        type: string
+      id:
+        description: 连接信息的id
+        type: string
+      ip:
+        description: IP地址
+        type: string
+      name:
+        description: 连接名
+        type: string
+      password:
+        description: 密码
+        type: string
+      port:
+        description: 端口
+        type: integer
+      savePwd:
+        description: 是否保存密码
+        type: boolean
+      userName:
+        description: 用户名
+        type: string
+    required:
+    - ip
+    - name
+    - userName
+    type: object
+  model.Res:
+    properties:
+      code:
+        type: integer
+      data:
+        type: object
+      msg:
+        type: string
+    type: object
+host: 127.0.0.1:8080
+info:
+  contact:
+    name: Carlos Huang
+    url: https://github.com/dragonhht
+  description: 数据库工具后端API接口文档
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: 数据库工具
+  version: "1.0"
+paths:
+  /database/connect/save:
+    post:
+      description: 保存或更新数据库连接信息
+      parameters:
+      - description: message
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/model.ConnectMessage'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Res'
+      summary: 保存连接信息
+      tags:
+      - 测试
+swagger: "2.0"

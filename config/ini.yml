@@ -1,0 +1,4 @@
+# 数据存储路径
+data-dir: ./data
+# 连接信息存储路径(data-dir下的文件夹)
+data-connect-dir: connections

@@ -1,0 +1,113 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "数据库工具后端API接口文档",
+        "title": "数据库工具",
+        "contact": {
+            "name": "Carlos Huang",
+            "url": "https://github.com/dragonhht"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "127.0.0.1:8080",
+    "basePath": "/",
+    "paths": {
+        "/database/connect/save": {
+            "post": {
+                "description": "保存或更新数据库连接信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "测试"
+                ],
+                "summary": "保存连接信息",
+                "parameters": [
+                    {
+                        "description": "message",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ConnectMessage"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Res"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.ConnectMessage": {
+            "type": "object",
+            "required": [
+                "ip",
+                "name",
+                "userName"
+            ],
+            "properties": {
+                "charset": {
+                    "description": "编码",
+                    "type": "string"
+                },
+                "database": {
+                    "description": "数据库名称",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "连接信息的id",
+                    "type": "string"
+                },
+                "ip": {
+                    "description": "IP地址",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "连接名",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "密码",
+                    "type": "string"
+                },
+                "port": {
+                    "description": "端口",
+                    "type": "integer"
+                },
+                "savePwd": {
+                    "description": "是否保存密码",
+                    "type": "boolean"
+                },
+                "userName": {
+                    "description": "用户名",
+                    "type": "string"
+                }
+            }
+        },
+        "model.Res": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "object"
+                },
+                "msg": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
