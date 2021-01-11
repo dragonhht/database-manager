@@ -11,8 +11,8 @@ import (
 // mysqlOperate MySQL数据库操作工具类
 type mysqlOperate struct {
 	model.DbConnectMessage
-	connectStr string // 数据库连接字符串
-	connect *sql.DB // 数据库连接
+	connectStr string  // 数据库连接字符串
+	connect    *sql.DB // 数据库连接
 }
 
 func NewMysqlOperate(dbConnectMessage model.DbConnectMessage) *mysqlOperate {

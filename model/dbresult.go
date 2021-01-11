@@ -2,13 +2,12 @@ package model
 
 // dbQueryModel 关系型数据库查询结果模型
 type DbQueryModel struct {
-    titles []string // 查询字段列表
-    data [][]interface{} // 数据
+	titles []string        // 查询字段列表
+	data   [][]interface{} // 数据
 }
 
 // FieldValue 字段值
 type FieldValue struct {
-
 }
 
 //NewDbQueryModel 创建关系型数据库查询结果模型

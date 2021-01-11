@@ -21,9 +21,9 @@ func NewDbConnectMessage(userName string, password string, port int, ip string, 
 	return DbConnectMessage{
 		UserName: userName,
 		Password: password,
-		Port: port,
-		Ip: ip,
+		Port:     port,
+		Ip:       ip,
 		Database: database,
-		Charset: charset,
+		Charset:  charset,
 	}
 }
