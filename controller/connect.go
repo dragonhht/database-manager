@@ -3,7 +3,6 @@ package controller
 import (
 	"database-client/model"
 	"database-client/utils/helper"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -16,15 +15,25 @@ import (
 // @Success 200 {object} model.Res
 // @Router /database/connect/save [post]
 func SaveConnect(c *gin.Context) {
-	var message model.ConnectMessage
+	var message *model.ConnectMessage
 	if err := c.ShouldBindJSON(&message); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, model.Res{
+			Code: http.StatusBadRequest,
+			Msg:  err.Error(),
+		})
 		return
 	}
-	fmt.Printf("message: %v\n", message)
+	err := helper.SaveConnect(message)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, model.Res{
+			Code: http.StatusBadRequest,
+			Msg:  err.Error(),
+		})
+		return
+	}
 	c.JSON(http.StatusOK, model.Res{
 		Code: 200,
-		Data: helper.CONFIG.DataDir,
-		Msg:  "",
+		Data: message.Id,
+		Msg:  "OK",
 	})
 }

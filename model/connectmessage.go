@@ -4,11 +4,11 @@ package model
 type ConnectMessage struct {
 	DbConnectMessage
 	// 连接名
-	Name string `form:"name" binding:"required"`
+	Name string `form:"name" json:"name" binding:"required"`
 	// 是否保存密码
-	SavePwd bool `form:"savePwd"`
+	SavePwd bool `form:"savePwd" json:"savePwd"`
 	// 连接信息的id
-	Id string `form:"id"`
+	Id string `form:"id" json:"id"`
 }
 
 //NewConnectMessage 创建数据库连接信息对象
