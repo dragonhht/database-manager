@@ -31,6 +31,37 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/database/connect/list": {
+            "get": {
+                "description": "获取所有保存的连接信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "测试"
+                ],
+                "summary": "获取所有连接信息",
+                "parameters": [
+                    {
+                        "description": "message",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ConnectMessage"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Res"
+                        }
+                    }
+                }
+            }
+        },
         "/database/connect/save": {
             "post": {
                 "description": "保存或更新数据库连接信息",
@@ -103,6 +134,10 @@ var doc = `{
                 "savePwd": {
                     "description": "是否保存密码",
                     "type": "boolean"
+                },
+                "type": {
+                    "description": "数据库类型",
+                    "type": "string"
                 },
                 "userName": {
                     "description": "用户名",

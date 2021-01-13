@@ -14,15 +14,23 @@ import (
 func initRouter() *gin.Engine {
 	swaggerSetting()
 	router := gin.Default()
-	// swagger
-	router.Use(Cors())
+	// 设置中间件
+	middlewareSetting(router)
+	// 配置swagger
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
+	// 连接信息
 	apis := router.Group("/database/connect")
-
 	apis.POST("/save", controller.SaveConnect)
+	apis.GET("/list", controller.GetConnects)
 
 	return router
+}
+
+// middlewareSetting 中间件设置
+func middlewareSetting(app *gin.Engine) {
+	// Cors
+	app.Use(Cors())
 }
 
 // swaggerSetting Swagger配置

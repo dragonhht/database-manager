@@ -33,7 +33,7 @@ func LoadConfig() config {
 
 // LoadCryptoKey 加载加密key
 func LoadCryptoKey() []byte {
-	path := utils.GetFileFullPath(CONFIG.ConnectionDir, "USERPWD")
+	path := utils.GetFileFullPath(CONFIG.DataDir, "USERPWD")
 	exist, err := utils.FileIsExist(path)
 	if err != nil {
 		panic(err)

@@ -9,6 +9,8 @@ type ConnectMessage struct {
 	SavePwd bool `form:"savePwd" json:"savePwd"`
 	// 连接信息的id
 	Id string `form:"id" json:"id"`
+	// 数据库类型
+	Type string `form:"type" json:"type"`
 }
 
 //NewConnectMessage 创建数据库连接信息对象
