@@ -1,27 +1,23 @@
 import React from 'react'
-import { Menu, Dropdown, Divider, Layout } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+import { Menu, Dropdown, Divider, Layout } from 'antd'
+import { DownOutlined } from '@ant-design/icons'
 const { Header, Content } = Layout
+import { ConnectMessage } from '@/model/model'
 
-import cssObj from '@/css/HeaderMenu.less'
+const cssObj = require('@/css/HeaderMenu.less').default
 
 // 新建连接弹窗
 import MySQLConnectModal from '@/Component/modal/connect/MySQLConnectModal'
 
 /** 顶部菜单 */
-class HeaderMenu extends React.Component {
+class HeaderMenu extends React.Component<any, any> {
 
-  constructor() {
-    super()
-    this.state = {
-      connectMySQLVisible: false, // 连接弹窗显示控制
-      connectMsg: {
-        name: 'good'
-      }, // 连接信息
-    }
+  public state = {
+    connectMySQLVisible: false, // 连接弹窗显示控制
+    connectMsg: new ConnectMessage(), // 连接信息
   }
 
-  render () {
+  render() {
     return <Layout>
       {/** 顶部菜单 */}
       <Header className={cssObj['top-menu-nav']}>
@@ -60,7 +56,7 @@ class HeaderMenu extends React.Component {
   )
 
   // 显示连接弹窗
-  showConnectModal = (type) => {
+  showConnectModal = (type: string) => {
     switch (type) {
       case 'mysql': // 显示MySQL连接弹窗
         this.setState({
@@ -71,7 +67,8 @@ class HeaderMenu extends React.Component {
   }
 
   // 改变连接弹窗显示状态
-  changeConnectMySQLModal = (visible, data) => {
+  changeConnectMySQLModal = (visible: boolean, data: ConnectMessage) => {
+    console.log(data)
     this.setState({
       connectMySQLVisible: visible,
       connectMsg: data

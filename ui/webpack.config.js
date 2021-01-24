@@ -1,3 +1,4 @@
+'use strict';
 const path = require("path")
 const HtmlWebpackPlugin = require("html-webpack-plugin") // 用于在内存中生成html
 
@@ -7,12 +8,21 @@ const htmlPlugin = new HtmlWebpackPlugin({
 })
 
 module.exports = {
+  entry: "./src/index.tsx",
+  output: {
+    filename: "bundle.js",
+    path: __dirname + "/dist"
+  },
+
+  devtool: "source-map",
   mode: 'development', // development production
   plugins: [
     htmlPlugin
   ],
   module: {
     rules: [
+      { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
+      { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
       {
         test: /\.js|jsx$/,
         use: {
@@ -69,9 +79,13 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.jsx', '.js', '.json'],
+    extensions: ['.ts', '.tsx', '.js', '.json'],
     alias: {
-      "@": path.join(__dirname, 'src')
+      "@": path.join(__dirname, './src')
     }
-  }
+  },
+  // externals: {
+  //   "react": "React",
+  //   "react-dom": "ReactDOM"
+  // },
 }
