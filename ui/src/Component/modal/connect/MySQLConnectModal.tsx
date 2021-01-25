@@ -1,8 +1,10 @@
 import React from 'react'
-import { Modal, Button, Tabs, Form, Input, Checkbox } from 'antd';
-const { TabPane } = Tabs;
+import { Modal, Button, Tabs, Form, Input, Checkbox, message } from 'antd'
+const { TabPane } = Tabs
 import { ConnectModalProp } from '@/Component/modal/connect/ConnectModel'
-import { ConnectMessage } from '@/model/model';
+import { post } from '@/utils/HttpUtils'
+import { SAVE_CONNECT } from '@/config/url/ConnectUrls'
+import { ConnectMessage } from '@/model/model'
 
 const cssObj = require('@/Component/css/ConnectModal.less')
 
@@ -77,11 +79,17 @@ class MySQLConnectModal extends React.Component<ConnectModalProp, any> {
   }
 
   // 确认
-  handleOk = () => {
+  handleOk = async () => {
     this.setState({
       loading: true
     })
-    this.props.changeVisible(false, this.state.data)
+    let result = await this.saveMassage()
+    this.setState({
+      loading: false
+    })
+    if (result !== null) {
+      this.props.changeVisible(false, result)
+    }
   }
 
   // 取消
@@ -106,6 +114,29 @@ class MySQLConnectModal extends React.Component<ConnectModalProp, any> {
     this.connectFormRef.current.setFieldsValue({
       port: port
     })
+  }
+
+  // 保存连接信息
+  saveMassage = async () => {
+    let result = null
+    const params = this.state.data
+    params.port = parseInt(params.port + '')
+    if (!params.type || params.type === '') {
+      params.type = 'mysql'
+    }
+    await post(SAVE_CONNECT, params)
+      .then((res: any) => {
+        if (res.code === 200) {
+          result = res.data
+          message.success('保存成功')
+        } else {
+          message.error(res.msg)
+        }
+      })
+      .catch(err => {
+        message.error(err)
+      })
+    return result
   }
 }
 

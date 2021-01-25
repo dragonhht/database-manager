@@ -3,6 +3,7 @@ package main
 import (
 	"database-client/controller"
 	"database-client/docs"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -30,19 +31,11 @@ func initRouter() *gin.Engine {
 // middlewareSetting 中间件设置
 func middlewareSetting(app *gin.Engine) {
 	// Cors
-	app.Use(Cors())
+	app.Use(cors.Default())
 }
 
 // swaggerSetting Swagger配置
 func swaggerSetting() {
 	docs.SwaggerInfo.Title = "数据库连接工具API"
 	docs.SwaggerInfo.Version = "1.0"
-}
-
-// Cors Cors配置
-func Cors() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Header("Access-Control-Allow-Origin", "*")
-		c.Next()
-	}
 }

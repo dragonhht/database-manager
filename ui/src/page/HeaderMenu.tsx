@@ -68,7 +68,6 @@ class HeaderMenu extends React.Component<any, any> {
 
   // 改变连接弹窗显示状态
   changeConnectMySQLModal = (visible: boolean, data: ConnectMessage) => {
-    console.log(data)
     this.setState({
       connectMySQLVisible: visible,
       connectMsg: data

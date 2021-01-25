@@ -13,5 +13,5 @@ package main
 // @BasePath /
 func main() {
 	app := initRouter()
-	_ = app.Run(":8080")
+	_ = app.Run(":9999")
 }
