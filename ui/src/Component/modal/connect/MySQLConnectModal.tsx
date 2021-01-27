@@ -1,10 +1,10 @@
 import React from 'react'
-import { Modal, Button, Tabs, Form, Input, Checkbox, message } from 'antd'
+import { Modal, Button, Tabs, Form, Input, Checkbox, message, notification } from 'antd'
 const { TabPane } = Tabs
 import { ConnectModalProp } from '@/Component/modal/connect/ConnectModel'
 import { post } from '@/utils/HttpUtils'
-import { SAVE_CONNECT } from '@/config/url/ConnectUrls'
-import { ConnectMessage } from '@/model/model'
+import { SAVE_CONNECT, CONNECT_TEST } from '@/config/url/ConnectUrls'
+import { DatabaseType } from '@/constant/Enums'
 
 const cssObj = require('@/Component/css/ConnectModal.less')
 
@@ -21,6 +21,7 @@ class MySQLConnectModal extends React.Component<ConnectModalProp, any> {
 
   public state = {
     loading: false, // 确认等待
+    testLoading: false,
     data: {
       ...this.props.data
     },
@@ -37,10 +38,13 @@ class MySQLConnectModal extends React.Component<ConnectModalProp, any> {
       onCancel={this.handleCancel}
       centered={true}
       footer={[
-        <Button key="cancel" onClick={this.handleCancel}>
+        <Button key="test" onClick={() => this.connectTest()} loading={this.state.testLoading}>
+          连接测试
+        </Button>,
+        <Button key="cancel" onClick={() => this.handleCancel()}>
           取消
       </Button>,
-        <Button key="ok" type="primary" loading={this.state.loading} onClick={this.handleOk}>
+        <Button key="ok" type="primary" loading={this.state.loading} onClick={() => this.handleOk()}>
           确定
       </Button>,
       ]}
@@ -67,7 +71,7 @@ class MySQLConnectModal extends React.Component<ConnectModalProp, any> {
               <Input {...inputProps} />
             </Form.Item>
             <Form.Item wrapperCol={{ span: 12 }} label="密码" name="password" >
-              <Input {...inputProps} />
+              <Input {...inputProps} type="password" />
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 4 }} name="savePwd" valuePropName="checked">
               <Checkbox>记住密码</Checkbox>
@@ -122,21 +126,72 @@ class MySQLConnectModal extends React.Component<ConnectModalProp, any> {
     const params = this.state.data
     params.port = parseInt(params.port + '')
     if (!params.type || params.type === '') {
-      params.type = 'mysql'
+      params.type = DatabaseType.MYSQL
     }
     await post(SAVE_CONNECT, params)
       .then((res: any) => {
         if (res.code === 200) {
           result = res.data
-          message.success('保存成功')
+          notification.success({
+            message: '提示',
+            description: '保存成功'
+          })
         } else {
-          message.error(res.msg)
+          notification.error({
+            message: '错误',
+            description: res.msg,
+            duration: null
+          })
         }
       })
       .catch(err => {
-        message.error(err)
+        notification.error({
+          message: '错误',
+          description: err,
+          duration: null
+        })
       })
     return result
+  }
+
+  // 连接测试
+  connectTest = () => {
+    this.setState({
+      testLoading: true
+    })
+    const params = this.state.data
+    params.port = parseInt(params.port + '')
+    if (!params.type || params.type === '') {
+      params.type = DatabaseType.MYSQL
+    }
+    post(CONNECT_TEST, params)
+      .then((res: any) => {
+        this.setState({
+          testLoading: false
+        })
+        if (res.code === 200) {
+          notification.success({
+            message: '提示',
+            description: '连接测试成功'
+          })
+        } else {
+          notification.error({
+            message: '错误',
+            description: res.msg,
+            duration: null
+          })
+        }
+      })
+      .catch(err => {
+        this.setState({
+          testLoading: false
+        })
+        notification.error({
+          message: '错误',
+          description: err,
+          duration: null
+        })
+      })
   }
 }
 

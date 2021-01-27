@@ -3,6 +3,7 @@ import { Menu, Dropdown, Divider, Layout } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
 const { Header, Content } = Layout
 import { ConnectMessage } from '@/model/model'
+import { DatabaseType } from '@/constant/Enums'
 
 const cssObj = require('@/css/HeaderMenu.less').default
 
@@ -40,7 +41,7 @@ class HeaderMenu extends React.Component<any, any> {
     <Menu>
       <Menu.SubMenu title="新建连接">
         <Menu.Item>
-          <a onClick={() => this.showConnectModal('mysql')}>Mysql</a>
+          <a onClick={() => this.showConnectModal(DatabaseType.MYSQL)}>Mysql</a>
         </Menu.Item>
         <Menu.Item>
           <a>Postgre SQL</a>
@@ -58,7 +59,7 @@ class HeaderMenu extends React.Component<any, any> {
   // 显示连接弹窗
   showConnectModal = (type: string) => {
     switch (type) {
-      case 'mysql': // 显示MySQL连接弹窗
+      case DatabaseType.MYSQL: // 显示MySQL连接弹窗
         this.setState({
           connectMySQLVisible: true
         })

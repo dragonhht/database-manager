@@ -1,8 +1,10 @@
 package helper
 
 import (
+	"database-client/enum"
 	"database-client/model"
 	"database-client/utils"
+	"database-client/utils/db/mysql"
 	"encoding/json"
 	"errors"
 	"github.com/go-basic/uuid"
@@ -55,4 +57,31 @@ func SaveConnect(message *model.ConnectMessage) error {
 	content := utils.EnAesCode(msg, CryptoKey)
 	err = utils.SaveFile(path, []byte(content))
 	return err
+}
+
+// TestConnect 测试连接
+func TestConnect(message *model.ConnectMessage) error {
+	switch message.Type {
+	case enum.MYSQL: // MySQL
+		operate := mysql.NewMysqlOperate(message.DbConnectMessage)
+		db, err := operate.Connect()
+		if err != nil {
+			return err
+		}
+		defer operate.Close()
+		err = db.Ping()
+		if err != nil {
+			return err
+		}
+		if db == nil {
+			return errors.New("连接数据库失败")
+		}
+		return nil
+	//case enum.POSTGRESQL:
+	// TODO 其他数据库连接测试
+	//case enum.MSSQL:
+	default:
+		return errors.New("不支持的数据库类型")
+	}
+	return nil
 }

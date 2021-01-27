@@ -24,6 +24,7 @@ func initRouter() *gin.Engine {
 	apis := router.Group("/database/connect")
 	apis.POST("/save", controller.SaveConnect)
 	apis.GET("/list", controller.GetConnects)
+	apis.POST("/test", controller.TestConnect)
 
 	return router
 }

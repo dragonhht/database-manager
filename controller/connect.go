@@ -21,12 +21,38 @@ func SaveConnect(c *gin.Context) {
 		handler.HandleResult(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
-	err := helper.SaveConnect(message)
+	err := helper.TestConnect(message)
+	if err != nil {
+		handler.HandleResult(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+	err = helper.SaveConnect(message)
 	if err != nil {
 		handler.HandleResult(c, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
 	handler.HandleResult(c, http.StatusOK, "OK", message)
+}
+
+// @Summary 测试连接
+// @Description 测试数据库连接
+// @Tags 测试
+// @Produce  json
+// @Param message body model.ConnectMessage true "message"
+// @Success 200 {object} model.Res
+// @Router /database/connect/test [post]
+func TestConnect(c *gin.Context) {
+	var message *model.ConnectMessage
+	if err := c.ShouldBindJSON(&message); err != nil {
+		handler.HandleResult(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+	err := helper.TestConnect(message)
+	if err != nil {
+		handler.HandleResult(c, http.StatusInternalServerError, err.Error(), nil)
+		return
+	}
+	handler.HandleResult(c, http.StatusOK, "OK", nil)
 }
 
 // @Summary 获取所有连接信息

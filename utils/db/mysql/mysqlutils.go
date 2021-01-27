@@ -24,23 +24,23 @@ func (m *mysqlOperate) buildMySqlConnectStr() (string, error) {
 	if m.connectStr != "" {
 		return m.connectStr, nil
 	}
-	if m.UserName() == "" {
+	if m.UserName == "" {
 		return "", errors.New("用户名不能为空")
 	}
-	if m.Ip() == "" {
+	if m.Ip == "" {
 		return "", errors.New("IP不能为空")
 	}
-	charset := m.Charset()
+	charset := m.Charset
 	if charset == "" {
 		charset = "utf8"
 	}
-	m.connectStr = fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s", m.UserName(),
-		m.Password(), m.Ip(), m.Port(), m.Database(), charset)
+	m.connectStr = fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s", m.UserName,
+		m.Password, m.Ip, m.Port, m.Database, charset)
 	return m.connectStr, nil
 }
 
 //Connect 连接数据库
-func (m *mysqlOperate) Connect(connectMsg model.DbConnectMessage) (*sql.DB, error) {
+func (m *mysqlOperate) Connect() (*sql.DB, error) {
 	connectStr, err := m.buildMySqlConnectStr()
 	if err != nil {
 		return nil, err
@@ -53,7 +53,7 @@ func (m *mysqlOperate) Connect(connectMsg model.DbConnectMessage) (*sql.DB, erro
 //Query 查询
 func (m *mysqlOperate) Query(sqlStr string, params ...interface{}) (*model.DbQueryModel, error) {
 	if m.connect == nil {
-		_, err := m.Connect(m.DbConnectMessage)
+		_, err := m.Connect()
 		if err != nil {
 			return nil, err
 		}
@@ -126,7 +126,7 @@ func createVar(typeName string) (interface{}, error) {
 //Update 更新
 func (m *mysqlOperate) Update(sql string, params ...interface{}) (int64, error) {
 	if m.connect == nil {
-		_, err := m.Connect(m.DbConnectMessage)
+		_, err := m.Connect()
 		if err != nil {
 			return 0, err
 		}
@@ -151,7 +151,7 @@ func (m *mysqlOperate) Update(sql string, params ...interface{}) (int64, error) 
 //Delete 刪除
 func (m *mysqlOperate) Delete(sql string, params ...interface{}) (int64, error) {
 	if m.connect == nil {
-		_, err := m.Connect(m.DbConnectMessage)
+		_, err := m.Connect()
 		if err != nil {
 			return 0, err
 		}
@@ -175,7 +175,7 @@ func (m *mysqlOperate) Delete(sql string, params ...interface{}) (int64, error) 
 
 func (m *mysqlOperate) Insert(sql string, params ...interface{}) (int64, error) {
 	if m.connect == nil {
-		_, err := m.Connect(m.DbConnectMessage)
+		_, err := m.Connect()
 		if err != nil {
 			return 0, err
 		}
