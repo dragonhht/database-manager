@@ -21,10 +21,14 @@ func initRouter() *gin.Engine {
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// 连接信息
-	apis := router.Group("/database/connect")
-	apis.POST("/save", controller.SaveConnect)
-	apis.GET("/list", controller.GetConnects)
-	apis.POST("/test", controller.TestConnect)
+	connects := router.Group("/database/connect")
+	connects.POST("/save", controller.SaveConnect)
+	connects.GET("/list", controller.GetConnects)
+	connects.POST("/test", controller.TestConnect)
+
+	// 数据库操作
+	dbs := router.Group("/database/db")
+	dbs.GET("/list", controller.Dbs)
 
 	return router
 }

@@ -6,7 +6,7 @@ import { post } from '@/utils/HttpUtils'
 import { SAVE_CONNECT, CONNECT_TEST } from '@/config/url/ConnectUrls'
 import { DatabaseType } from '@/constant/Enums'
 
-const cssObj = require('@/Component/css/ConnectModal.less')
+const cssObj = require('@/Component/css/ConnectModal.less').default
 
 // 通用Input属性
 const inputProps = {
@@ -38,7 +38,7 @@ class MySQLConnectModal extends React.Component<ConnectModalProp, any> {
       onCancel={this.handleCancel}
       centered={true}
       footer={[
-        <Button key="test" onClick={() => this.connectTest()} loading={this.state.testLoading}>
+        <Button className={cssObj['test-btn']} key="test" onClick={() => this.connectTest()} loading={this.state.testLoading}>
           连接测试
         </Button>,
         <Button key="cancel" onClick={() => this.handleCancel()}>
