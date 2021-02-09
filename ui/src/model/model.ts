@@ -22,9 +22,11 @@ export class ConnectMessage {
   database?: string = ''
   /** 编码 */
   charset?: string = ''
+  /** schema */
+  schema?: string = ''
 
   constructor(id?: string, name?: string, type?: string, savePwd?: boolean, ip?: string, port?: number, userName?: string,
-    password?: string, database?: string, charset?: string) {
+    password?: string, database?: string, charset?: string, schema?: string) {
     this.id = id
     this.name = name
     this.type = type
@@ -35,6 +37,7 @@ export class ConnectMessage {
     this.password = password
     this.database = database
     this.charset = charset
+    this.schema = schema
   }
 
 }

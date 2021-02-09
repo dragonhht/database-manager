@@ -3,7 +3,7 @@ import { Tree } from 'antd'
 import { DownOutlined, DatabaseOutlined } from '@ant-design/icons'
 import { EventDataNode } from 'antd/lib/tree'
 import { ConnectMessage } from '@/model/model'
-import { CONNECT_LIST, DB_LIST } from '@/config/url/ConnectUrls'
+import { CONNECT_LIST, DB_LIST, TABLE_LIST } from '@/config/url/ConnectUrls'
 import { get, post } from '@/utils/HttpUtils'
 
 enum NodeType {
@@ -168,22 +168,24 @@ export default class ConnectTree extends React.Component<any, TreeState> {
    * 加载表
    * @param node 表父节点
    */
-  loadTables = (node: DataNode) => {
+  loadTables = async (node: DataNode) => {
     // TODO 加载表
-    const tables: DataNode[] = [
-      {
-        title: 'table-1',
-        key: node.key + '0',
-        type: NodeType.TABLE,
-        isLeaf: true
-      },
-      {
-        title: 'table-2',
-        key: node.key + '1',
-        type: NodeType.TABLE,
-        isLeaf: true
-      }
-    ]
+    const tables: DataNode[] = []
+    let connectMsg = node.connectMsg
+    await get(`${TABLE_LIST}?connectId=${connectMsg?.id}&database=${connectMsg?.database}&schema=${connectMsg?.schema}`)
+      .then((res: any) => {
+        if (res.code === 200) {
+          let data = res.data
+          data.forEach((el: string) => {
+            tables.push({
+              title: el,
+              key: node.key + el,
+              type: NodeType.TABLE,
+              isLeaf: true
+            })
+          });
+        }
+      })
     this.setState({
       treeData: this.updateChildren(this.state.treeData, node.key, tables)
     })

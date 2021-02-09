@@ -9,3 +9,6 @@ export const CONNECT_LIST = 'connect/list'
 
 /** 数据库列表 */
 export const DB_LIST = 'db/list'
+
+/** 表列表 */
+export const TABLE_LIST = 'table/list'
