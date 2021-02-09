@@ -136,20 +136,7 @@ class MySQLConnectModal extends React.Component<ConnectModalProp, any> {
             message: '提示',
             description: '保存成功'
           })
-        } else {
-          notification.error({
-            message: '错误',
-            description: res.msg,
-            duration: null
-          })
         }
-      })
-      .catch(err => {
-        notification.error({
-          message: '错误',
-          description: err,
-          duration: null
-        })
       })
     return result
   }
@@ -174,23 +161,7 @@ class MySQLConnectModal extends React.Component<ConnectModalProp, any> {
             message: '提示',
             description: '连接测试成功'
           })
-        } else {
-          notification.error({
-            message: '错误',
-            description: res.msg,
-            duration: null
-          })
         }
-      })
-      .catch(err => {
-        this.setState({
-          testLoading: false
-        })
-        notification.error({
-          message: '错误',
-          description: err,
-          duration: null
-        })
       })
   }
 }

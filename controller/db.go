@@ -2,7 +2,6 @@ package controller
 
 import (
 	"database-client/handler"
-	"database-client/model"
 	"database-client/utils/helper"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -14,13 +13,10 @@ import (
 // @Produce  json
 // @Param message body model.ConnectMessage true "message"
 // @Success 200 {object} model.Res
-// @Router /database/db/list [post]
+// @Router /database/db/list [get]
 func Dbs(c *gin.Context) {
-	var message *model.ConnectMessage
-	if err := c.ShouldBindJSON(&message); err != nil {
-		handler.HandleResult(c, http.StatusInternalServerError, err.Error(), nil)
-		return
-	}
+	connectId := c.Query("connectId")
+	message := helper.CONNECT_MESSAGE_MAP[connectId]
 	dbs, err := helper.GetDbs(message)
 	if err != nil {
 		handler.HandleResult(c, http.StatusInternalServerError, err.Error(), nil)

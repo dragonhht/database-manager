@@ -4,3 +4,8 @@
 export const SAVE_CONNECT = '/connect/save'
 /** 测试连接 */
 export const CONNECT_TEST = '/connect/test'
+/** 数据库连接列表 */
+export const CONNECT_LIST = 'connect/list'
+
+/** 数据库列表 */
+export const DB_LIST = 'db/list'

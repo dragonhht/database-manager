@@ -3,27 +3,38 @@
  */
 export class ConnectMessage {
   /** id */
-  id: string = ''
+  id?: string = ''
   /** 连接名 */
-  name: string = ''
+  name?: string = ''
   /** 数据库类型 */
-  type: string = ''
+  type?: string = ''
   /** 是否保存密码 */
-  savePwd: boolean = false
+  savePwd?: boolean = false
   /** ip */
-  ip: string = ''
+  ip?: string = ''
   /** 端口号 */
-  port: number = -1
+  port?: number = -1
   /** 用户名 */
-  userName: string = ''
+  userName?: string = ''
   /** 密码 */
-  password: string = ''
+  password?: string = ''
   /** 数据库 */
-  database: string = ''
+  database?: string = ''
   /** 编码 */
-  charset: string = ''
+  charset?: string = ''
 
-  constructor() {
+  constructor(id?: string, name?: string, type?: string, savePwd?: boolean, ip?: string, port?: number, userName?: string,
+    password?: string, database?: string, charset?: string) {
+    this.id = id
+    this.name = name
+    this.type = type
+    this.savePwd = savePwd
+    this.ip = ip
+    this.port = port
+    this.userName = userName
+    this.password = password
+    this.database = database
+    this.charset = charset
   }
 
 }

@@ -10,6 +10,9 @@ import (
 	"github.com/go-basic/uuid"
 )
 
+// CONNECT_MESSAGE_MAP 保存的连接信息映射
+var CONNECT_MESSAGE_MAP map[string]*model.ConnectMessage
+
 // GetConnects 获取所有已保存的连接信息
 func GetConnects() (map[string]*model.ConnectMessage, error) {
 	connectDir := CONFIG.ConnectionDir
@@ -39,6 +42,7 @@ func GetConnects() (map[string]*model.ConnectMessage, error) {
 		}
 		result[v] = msg
 	}
+	CONNECT_MESSAGE_MAP = result
 	return result, nil
 }
 
@@ -54,6 +58,7 @@ func SaveConnect(message *model.ConnectMessage) error {
 	if err != nil {
 		return err
 	}
+	CONNECT_MESSAGE_MAP[id] = message
 	content := utils.EnAesCode(msg, CryptoKey)
 	err = utils.SaveFile(path, []byte(content))
 	return err

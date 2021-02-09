@@ -3,6 +3,8 @@ import { Tree } from 'antd'
 import { DownOutlined, DatabaseOutlined } from '@ant-design/icons'
 import { EventDataNode } from 'antd/lib/tree'
 import { ConnectMessage } from '@/model/model'
+import { CONNECT_LIST, DB_LIST } from '@/config/url/ConnectUrls'
+import { get, post } from '@/utils/HttpUtils'
 
 enum NodeType {
   /** 根节点 */
@@ -85,14 +87,15 @@ export default class ConnectTree extends React.Component<any, TreeState> {
       const data: DataNode = {
         title: node.title,
         key: node.key,
-        type: node.type
+        type: node.type,
+        connectMsg: node.connectMsg
       }
       switch (type) {
         case NodeType.CONNECT: // 加载连接节点下的数据
           this.loadDbs(data)
           break
         case NodeType.DB: // 加载数据库节点
-          const children = this.getDbChildren(data.key)
+          const children = this.getDbChildren(data)
           this.setState({
             treeData: this.updateChildren(this.state.treeData, data.key, children)
           })
@@ -190,22 +193,26 @@ export default class ConnectTree extends React.Component<any, TreeState> {
    * 加载数据库列表
    * @param node 
    */
-  loadDbs = (node: DataNode) => {
+  loadDbs = async (node: DataNode) => {
     // TODO 加载数据库列表
-    let dbs: DataNode[] = [
-      {
-        title: '数据库-1',
-        key: node.key + '-0',
-        icon: <DatabaseOutlined />,
-        type: NodeType.DB
-      },
-      {
-        title: '数据库-2',
-        key: node.key + '-1',
-        icon: <DatabaseOutlined />,
-        type: NodeType.DB
+    let dbs: DataNode[] = []
+    await get(`${DB_LIST}?connectId=${node.connectMsg?.id}`).then((res: any) => {
+      if (res.code === 200) {
+        let data = res.data
+        data.forEach((el: string) => {
+          let connMsg = new ConnectMessage()
+          Object.assign(connMsg, node.connectMsg)
+          connMsg.database = el
+          dbs.push({
+            title: el,
+            key: node.key + el,
+            type: NodeType.DB,
+            connectMsg: connMsg
+          })
+        });
       }
-    ]
+    })
+    console.log(dbs)
     this.setState({
       treeData: this.updateChildren(this.state.treeData, node.key, dbs)
     })
@@ -214,44 +221,52 @@ export default class ConnectTree extends React.Component<any, TreeState> {
   /**
    * 获取数据库节点的子节点
    */
-  getDbChildren = (key: string): DataNode[] => {
+  getDbChildren = (node: DataNode): DataNode[] => {
+    let key = node.key
     // TODO 图标设置
     return [
       {
         title: '表',
         key: key + 'table',
-        type: NodeType.TABLE_PARENT
+        type: NodeType.TABLE_PARENT,
+        connectMsg: node.connectMsg
       },
       {
         title: '视图',
         key: key + 'view',
-        type: NodeType.VIEW_PARENT
+        type: NodeType.VIEW_PARENT,
+        connectMsg: node.connectMsg
       },
       {
         title: '脚本',
         key: key + 'script',
-        type: NodeType.SCRIPT_PARENT
+        type: NodeType.SCRIPT_PARENT,
+        connectMsg: node.connectMsg
       },
     ]
   }
 
   // 获取连接列表
-  getConnects = () => {
+  getConnects = async () => {
     // TODO 获取连接列表
-    let connects: DataNode[] = [
-      {
-        title: '连接-1',
-        key: '0',
-        icon: <DatabaseOutlined />,
-        type: NodeType.CONNECT
-      },
-      {
-        title: '连接-2',
-        key: '1',
-        icon: <DatabaseOutlined />,
-        type: NodeType.CONNECT
+    let connects: DataNode[] = []
+    await get(CONNECT_LIST).then((res: any) => {
+      if (res.code === 200) {
+        let data = res.data
+        data.forEach((el: ConnectMessage) => {
+          let title = el.name
+          if (!title) title = ''
+          let key = el.id
+          if (!key) key = ''
+          connects.push({
+            title: title,
+            key: key,
+            type: NodeType.CONNECT,
+            connectMsg: el
+          })
+        });
       }
-    ]
+    })
     this.setState((state: TreeState) => {
       state.treeData = this.updateChildren(this.state.treeData, '-1', connects)
       return state

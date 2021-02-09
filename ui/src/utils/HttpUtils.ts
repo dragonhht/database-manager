@@ -1,4 +1,5 @@
 import axios from '@/config/axios/AxiosConfig'
+import { notification } from 'antd'
 
 /**
  * GET请求
@@ -13,9 +14,21 @@ export function get(url: string, parmars?: object, headers?: object) {
       headers: headers
     })
       .then(res => {
+        if (res.data.code !== 200) {
+          notification.error({
+            message: '错误',
+            description: res.data.msg,
+            duration: null
+          })
+        }
         resolve(res.data)
       })
       .catch(err => {
+        notification.error({
+          message: '错误',
+          description: err.data,
+          duration: null
+        })
         reject(err.data)
       })
   })
@@ -33,9 +46,21 @@ export function post(url: string, params?: object, headers?: object) {
       headers: headers
     })
       .then(res => {
+        if (res.data.code !== 200) {
+          notification.error({
+            message: '错误',
+            description: res.data.msg,
+            duration: null
+          })
+        }
         resolve(res.data)
       })
       .catch(err => {
+        notification.error({
+          message: '错误',
+          description: err.data,
+          duration: null
+        })
         reject(err.data)
       })
   })
@@ -54,9 +79,21 @@ export function del(url: string, params?: object, headers?: object) {
       headers: headers
     })
       .then(res => {
+        if (res.data.code !== 200) {
+          notification.error({
+            message: '错误',
+            description: res.data.msg,
+            duration: null
+          })
+        }
         resolve(res.data)
       })
       .catch(err => {
+        notification.error({
+          message: '错误',
+          description: err.data,
+          duration: null
+        })
         reject(err.data)
       })
   })
