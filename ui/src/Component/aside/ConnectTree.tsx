@@ -1,10 +1,12 @@
 import React, { Children, useState } from 'react'
 import { Tree } from 'antd'
-import { DownOutlined, DatabaseOutlined } from '@ant-design/icons'
+import { TableOutlined, DatabaseOutlined, EyeOutlined, ConsoleSqlOutlined } from '@ant-design/icons'
 import { EventDataNode } from 'antd/lib/tree'
 import { ConnectMessage } from '@/model/model'
-import { CONNECT_LIST, DB_LIST, TABLE_LIST } from '@/config/url/ConnectUrls'
+import { CONNECT_LIST, DB_LIST, TABLE_LIST, VIEW_LIST } from '@/config/url/ConnectUrls'
 import { get, post } from '@/utils/HttpUtils'
+// const cssObj = require('@/Component/css/ConnectTree.less').default
+import '@/Component/css/ConnectTree.css'
 
 enum NodeType {
   /** 根节点 */
@@ -48,7 +50,9 @@ interface DataNode {
 /** 初始树形数据 */
 interface TreeState {
   // 主要数据
-  treeData: DataNode[]
+  treeData: DataNode[],
+  // 上一次点击节点
+  lastSelectNode: String,
 }
 
 export default class ConnectTree extends React.Component<any, TreeState> {
@@ -60,7 +64,8 @@ export default class ConnectTree extends React.Component<any, TreeState> {
         key: '-1',
         type: NodeType.ROOT
       }
-    ]
+    ],
+    lastSelectNode: '',
   }
 
   componentDidMount = () => {
@@ -69,11 +74,24 @@ export default class ConnectTree extends React.Component<any, TreeState> {
 
   render() {
     return <Tree treeData={this.state.treeData}
-      defaultExpandedKeys={['-1']}
+      className="tree-content"
+      defaultExpandedKeys={["-1"]}
       showIcon
-      switcherIcon={<DownOutlined />}
       loadData={this.onloadNodeData}
+      onSelect={(key, obj) => this.selectNode(key, obj)}
     ></Tree>
+  }
+
+  /**
+   * 选择树形节点
+   * @param key 树形节点key
+   * @param obj 
+   */
+  selectNode = (key: React.Key[], obj: any) => {
+    let node = obj.node
+    this.setState({
+      lastSelectNode: node.key
+    })
   }
 
   /**
@@ -125,13 +143,15 @@ export default class ConnectTree extends React.Component<any, TreeState> {
         title: 'script-1',
         key: node.key + '0',
         type: NodeType.SCRIPT,
-        isLeaf: true
+        isLeaf: true,
+        icon: <ConsoleSqlOutlined />
       },
       {
         title: 'script-2',
         key: node.key + '1',
         type: NodeType.SCRIPT,
-        isLeaf: true
+        isLeaf: true,
+        icon: <ConsoleSqlOutlined />
       }
     ]
     this.setState({
@@ -143,22 +163,25 @@ export default class ConnectTree extends React.Component<any, TreeState> {
    * 加载视图
    * @param node 视图父节点
    */
-  loadViews = (node: DataNode) => {
+  loadViews = async (node: DataNode) => {
     // TODO 加载视图
-    const views: DataNode[] = [
-      {
-        title: 'view-1',
-        key: node.key + '0',
-        type: NodeType.VIEW,
-        isLeaf: true
-      },
-      {
-        title: 'view-2',
-        key: node.key + '1',
-        type: NodeType.VIEW,
-        isLeaf: true
-      }
-    ]
+    const views: DataNode[] = []
+    let connectMsg = node.connectMsg
+    await get(`${VIEW_LIST}?connectId=${connectMsg?.id}&database=${connectMsg?.database}&schema=${connectMsg?.schema}`)
+      .then((res: any) => {
+        if (res.code === 200) {
+          let data = res.data
+          data.forEach((el: string) => {
+            views.push({
+              title: el,
+              key: node.key + el,
+              type: NodeType.VIEW,
+              isLeaf: true,
+              icon: <EyeOutlined />
+            })
+          });
+        }
+      })
     this.setState({
       treeData: this.updateChildren(this.state.treeData, node.key, views)
     })
@@ -169,7 +192,6 @@ export default class ConnectTree extends React.Component<any, TreeState> {
    * @param node 表父节点
    */
   loadTables = async (node: DataNode) => {
-    // TODO 加载表
     const tables: DataNode[] = []
     let connectMsg = node.connectMsg
     await get(`${TABLE_LIST}?connectId=${connectMsg?.id}&database=${connectMsg?.database}&schema=${connectMsg?.schema}`)
@@ -181,6 +203,7 @@ export default class ConnectTree extends React.Component<any, TreeState> {
               title: el,
               key: node.key + el,
               type: NodeType.TABLE,
+              icon: <TableOutlined />,
               isLeaf: true
             })
           });
@@ -209,12 +232,12 @@ export default class ConnectTree extends React.Component<any, TreeState> {
             title: el,
             key: node.key + el,
             type: NodeType.DB,
-            connectMsg: connMsg
+            connectMsg: connMsg,
+            icon: <DatabaseOutlined />
           })
         });
       }
     })
-    console.log(dbs)
     this.setState({
       treeData: this.updateChildren(this.state.treeData, node.key, dbs)
     })
@@ -231,19 +254,22 @@ export default class ConnectTree extends React.Component<any, TreeState> {
         title: '表',
         key: key + 'table',
         type: NodeType.TABLE_PARENT,
-        connectMsg: node.connectMsg
+        connectMsg: node.connectMsg,
+        icon: <TableOutlined />
       },
       {
         title: '视图',
         key: key + 'view',
         type: NodeType.VIEW_PARENT,
-        connectMsg: node.connectMsg
+        connectMsg: node.connectMsg,
+        icon: <EyeOutlined />
       },
       {
         title: '脚本',
         key: key + 'script',
         type: NodeType.SCRIPT_PARENT,
-        connectMsg: node.connectMsg
+        connectMsg: node.connectMsg,
+        icon: <ConsoleSqlOutlined />
       },
     ]
   }

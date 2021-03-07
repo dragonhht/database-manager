@@ -8,7 +8,10 @@ export const CONNECT_TEST = '/connect/test'
 export const CONNECT_LIST = 'connect/list'
 
 /** 数据库列表 */
-export const DB_LIST = 'db/list'
+export const DB_LIST = '/db/list'
 
 /** 表列表 */
-export const TABLE_LIST = 'table/list'
+export const TABLE_LIST = '/table/list'
+
+/** 视图列表 */
+export const VIEW_LIST = '/view/list'

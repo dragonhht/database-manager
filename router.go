@@ -34,6 +34,10 @@ func initRouter() *gin.Engine {
 	tables := router.Group("/database/table")
 	tables.GET("/list", controller.GetTables)
 
+	// 视图操作
+	views := router.Group("/database/view")
+	views.GET("list", controller.GetViews)
+
 	return router
 }
 
