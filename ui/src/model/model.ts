@@ -1,3 +1,5 @@
+import React from 'react'
+
 /**
  * 数据库连接信息接口
  */
@@ -40,4 +42,25 @@ export class ConnectMessage {
     this.schema = schema
   }
 
+}
+
+/**
+ * 主区域，页签数据
+ */
+export class MainTabMessage {
+  /** 连接信息 */
+  connectMessage?: ConnectMessage
+  /** 标题 */
+  title: String
+  /** 键 */
+  key: React.Key
+  /** 内容 */
+  content?: any
+
+  constructor(title: String, key: React.Key, connectMessage?: ConnectMessage, content?: any) {
+    this.connectMessage = connectMessage
+    this.title = title
+    this.key = key
+    this.content = content
+  }
 }
