@@ -1,5 +1,7 @@
 import React from 'react'
 import { Layout } from 'antd'
+import { Provider } from 'react-redux'
+import store from '@/store/store'
 const { Header, Footer, Sider, Content } = Layout
 
 const mainCss = require('@/css/Main.less').default

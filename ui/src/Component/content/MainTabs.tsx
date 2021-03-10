@@ -2,6 +2,7 @@ import React from 'react'
 import { Tabs } from 'antd'
 const { TabPane } = Tabs
 import { MainTabMessage } from '@/model/model'
+import store from '@/store/store'
 const cssObj = require('@/Component/css/MainTabs.less').default
 
 interface MainTabsState {
@@ -20,7 +21,13 @@ export default class MainTabs extends React.Component<any, MainTabsState> {
     panes: [
       new MainTabMessage('对象', '-1', undefined, defaultPanel), // 默认页签
     ],
-    activeTab: ''
+    activeTab: '-1'
+  }
+
+  componentDidMount() {
+    store.subscribe(() => {
+      console.log('store.getState().nowUsedConnectId', store.getState().nowType)
+    })
   }
 
   render() {

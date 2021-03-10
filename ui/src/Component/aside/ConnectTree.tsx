@@ -1,9 +1,10 @@
 import React, { Children, useState } from 'react'
 import { Tree } from 'antd'
+import actionCreator from '@/store/actionCreator'
 import { TableOutlined, DatabaseOutlined, EyeOutlined, ConsoleSqlOutlined } from '@ant-design/icons'
-import { EventDataNode } from 'antd/lib/tree'
 import { ConnectMessage } from '@/model/model'
 import { CONNECT_LIST, DB_LIST, TABLE_LIST, VIEW_LIST } from '@/config/url/ConnectUrls'
+import { ViewType } from '@/constant/Enums'
 import { get, post } from '@/utils/HttpUtils'
 // const cssObj = require('@/Component/css/ConnectTree.less').default
 import '@/Component/css/ConnectTree.css'
@@ -28,6 +29,10 @@ enum NodeType {
   /** 脚本节点 */
   SCRIPT = 'script'
 }
+
+const TABLE_TYPE = [NodeType.TABLE, NodeType.TABLE_PARENT]
+const VIEW_TYPE = [NodeType.VIEW, NodeType.VIEW_PARENT]
+const SCRIPT_TYPE = [NodeType.SCRIPT, NodeType.SCRIPT_PARENT]
 
 /** 树节点 */
 interface DataNode {
@@ -92,6 +97,16 @@ export default class ConnectTree extends React.Component<any, TreeState> {
     this.setState({
       lastSelectNode: node.key
     })
+    actionCreator.changeNowDb(node.connectMsg.id)
+    if (TABLE_TYPE.includes(node.type)) {
+      actionCreator.changeNowType(ViewType.TABLE)
+    } else if (VIEW_TYPE.includes(node.type)) {
+      actionCreator.changeNowType(ViewType.VIEW)
+    } else if (SCRIPT_TYPE.includes(node.type)) {
+      actionCreator.changeNowType(ViewType.SCRIPT)
+    } else {
+      actionCreator.changeNowType(ViewType.NULL)
+    }
   }
 
   /**
