@@ -1,17 +1,20 @@
-import State from '@/store/state'
+import state from '@/store/state'
+import { State } from '@/store/state'
 import Action from '@/store/model/Action'
 
-export default (prevState = State, actions: Action) => {
-  let newData = prevState
+export default (prevState = state, actions: Action): State => {
   let { type, payload } = actions
+  let data: State = {}
   switch (type) {
     case 'CHANGE_NOW_DB':
-      newData.nowUsedConnectId = payload
-      break
+      prevState.nowUsedConnectId = payload
+      Object.assign(data, prevState)
+      return data
     case 'CHANGE_NOW_TYPE':
-      newData.nowType = payload
-      break
+      prevState.nowType = payload
+      Object.assign(data, prevState)
+      return data
   }
-
-  return newData
+  let da: State = {}
+  return da
 }

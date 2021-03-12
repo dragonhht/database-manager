@@ -1,6 +1,7 @@
 import React, { Children, useState } from 'react'
 import { Tree } from 'antd'
 import actionCreator from '@/store/actionCreator'
+import { connect } from 'react-redux'
 import { TableOutlined, DatabaseOutlined, EyeOutlined, ConsoleSqlOutlined } from '@ant-design/icons'
 import { ConnectMessage } from '@/model/model'
 import { CONNECT_LIST, DB_LIST, TABLE_LIST, VIEW_LIST } from '@/config/url/ConnectUrls'
@@ -60,7 +61,7 @@ interface TreeState {
   lastSelectNode: String,
 }
 
-export default class ConnectTree extends React.Component<any, TreeState> {
+class ConnectTree extends React.Component<any, TreeState> {
 
   state: TreeState = {
     treeData: [
@@ -192,7 +193,8 @@ export default class ConnectTree extends React.Component<any, TreeState> {
               key: node.key + el,
               type: NodeType.VIEW,
               isLeaf: true,
-              icon: <EyeOutlined />
+              icon: <EyeOutlined />,
+              connectMsg: connectMsg
             })
           });
         }
@@ -219,7 +221,8 @@ export default class ConnectTree extends React.Component<any, TreeState> {
               key: node.key + el,
               type: NodeType.TABLE,
               icon: <TableOutlined />,
-              isLeaf: true
+              isLeaf: true,
+              connectMsg: connectMsg
             })
           });
         }
@@ -351,3 +354,5 @@ export default class ConnectTree extends React.Component<any, TreeState> {
   }
 
 }
+
+export default connect()(ConnectTree)
