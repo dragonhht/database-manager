@@ -7,7 +7,7 @@ export default (prevState = state, actions: Action): State => {
   let data: State = {}
   switch (type) {
     case 'CHANGE_NOW_DB':
-      prevState.nowUsedConnectId = payload
+      prevState.nowUsedConnect = payload
       Object.assign(data, prevState)
       return data
     case 'CHANGE_NOW_TYPE':

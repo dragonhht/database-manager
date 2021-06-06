@@ -3,7 +3,7 @@ import { Tabs } from 'antd'
 const { TabPane } = Tabs
 import { MainTabMessage } from '@/model/model'
 import { connect } from 'react-redux'
-const cssObj = require('@/Component/css/MainTabs.less').default
+import DefaultTab from '@/Component/content/DefaultTab'
 
 interface MainTabsState {
   // 页签面板数组
@@ -13,7 +13,7 @@ interface MainTabsState {
 }
 
 // 默认页签面板
-let defaultPanel = <div className={cssObj['default-panel']}></div>
+let defaultPanel = <DefaultTab></DefaultTab>
 
 class MainTabs extends React.Component<any, MainTabsState> {
 
@@ -44,18 +44,17 @@ class MainTabs extends React.Component<any, MainTabsState> {
    * @param key 
    */
   change = (key: string) => {
-    console.log(this.props)
-    console.log('active', key)
     this.setState({
       activeTab: key
     })
+    console.log(this.props.nowUsedConnect)
   }
 }
 
 const mapStateToProps = (state: any) => {
   return {
     nowType: state.nowType,
-    nowUsedConnectId: state.nowUsedConnectId
+    nowUsedConnect: state.nowUsedConnect
   }
 }
 

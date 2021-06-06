@@ -98,7 +98,7 @@ class ConnectTree extends React.Component<any, TreeState> {
     this.setState({
       lastSelectNode: node.key
     })
-    actionCreator.changeNowDb(node.connectMsg.id)
+    actionCreator.changeNowDb(node.connectMsg)
     if (TABLE_TYPE.includes(node.type)) {
       actionCreator.changeNowType(ViewType.TABLE)
     } else if (VIEW_TYPE.includes(node.type)) {
@@ -183,7 +183,7 @@ class ConnectTree extends React.Component<any, TreeState> {
     // TODO 加载视图
     const views: DataNode[] = []
     let connectMsg = node.connectMsg
-    await get(`${VIEW_LIST}?connectId=${connectMsg?.id}&database=${connectMsg?.database}&schema=${connectMsg?.schema}`)
+    await get(`${VIEW_LIST}?connectId=${connectMsg?.id}&database=${connectMsg?.database}&schema=${connectMsg?.schema ? connectMsg?.schema : ''}`)
       .then((res: any) => {
         if (res.code === 200) {
           let data = res.data
@@ -211,7 +211,7 @@ class ConnectTree extends React.Component<any, TreeState> {
   loadTables = async (node: DataNode) => {
     const tables: DataNode[] = []
     let connectMsg = node.connectMsg
-    await get(`${TABLE_LIST}?connectId=${connectMsg?.id}&database=${connectMsg?.database}&schema=${connectMsg?.schema}`)
+    await get(`${TABLE_LIST}?connectId=${connectMsg?.id}&database=${connectMsg?.database}&schema=${connectMsg?.schema ? connectMsg?.schema : ''}`)
       .then((res: any) => {
         if (res.code === 200) {
           let data = res.data
