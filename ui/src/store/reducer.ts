@@ -14,6 +14,14 @@ export default (prevState = state, actions: Action): State => {
       prevState.nowType = payload
       Object.assign(data, prevState)
       return data
+    case 'CHANGE_TAB_INDEX':
+      prevState.tabIndex = payload
+      Object.assign(data, prevState)
+      return data
+    case 'CHANGE_HANDLER_NAME':
+      prevState.nowName = payload
+      Object.assign(data, prevState)
+      return data
   }
   let da: State = {}
   return da

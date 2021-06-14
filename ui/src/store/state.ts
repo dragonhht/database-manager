@@ -6,11 +6,16 @@ export interface State {
   nowUsedConnect?: ConnectMessage
   /** 当前查看对象类型 */
   nowType?: ViewType
+  /** 当前页签修改值 */
+  tabIndex?: Number,
+  /** 当前处理的文件名 */
+  nowName?: String
 }
 
 let state: State = {
   nowUsedConnect: undefined,
-  nowType: ViewType.NULL
+  nowType: ViewType.NULL,
+  tabIndex: undefined
 }
 
 export default state

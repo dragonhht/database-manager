@@ -11,22 +11,53 @@ const history: any = {}
  */
 export function subscribe(key: String, handler: Function) {
   Store.subscribe(() => {
-    subscribeChange(key, handler)
+    subscribeChange(handler, key)
   })
 }
 
-function subscribeChange(key: String, handler: Function): Boolean {
+/**
+ * 
+ * @param key 监听一个值的变化
+ * @param handler 处理函数
+ * @param paramKeys 处理函数参数key
+ */
+export function subscribeOne(key: String, handler: Function, ...paramKeys: String[]) {
+  Store.subscribe(() => {
+    const state = Store.getState()
+    let value = eval('state.' + key)
+    let historyVal = eval('history.' + key)
+    if (historyVal !== value) {
+      // 获取参数
+      let params: any[] = []
+      paramKeys.forEach(it => {
+        let param = eval('state.' + it)
+        params.push(param)
+      })
+      // 添加进入历史值
+      eval('history.' + key + "=value")
+      handler(...params)
+    }
+  })
+}
+
+function subscribeChange(handler: Function, ...keys: String[]) {
   const state = Store.getState()
-  let value = eval('state.' + key)
-  let historyVal = eval('history.' + key)
-  if (historyVal !== value) {
-    // 添加进入历史值
-    eval('history.' + key + "=value")
-    // 处理函数
-    handler()
-    return true
+  let ok = false
+  let params = []
+  for (let index in keys) {
+    let key = keys[index]
+    let value = eval('state.' + key)
+    let historyVal = eval('history.' + key)
+    if (historyVal !== value) {
+      // 添加进入历史值
+      eval('history.' + key + "=value")
+      ok = true
+    }
+    params.push(value)
   }
-  return false
+  if (ok) {
+    handler(...params)
+  }
 }
 
 /**
@@ -36,10 +67,6 @@ function subscribeChange(key: String, handler: Function): Boolean {
  */
 export function subscribeForOne(handler: Function, ...keys: String[]) {
   Store.subscribe(() => {
-    for (let index in keys) {
-      let key = keys[index]
-      let ok = subscribeChange(key, handler)
-      if (ok) return
-    }
+    subscribeChange(handler, ...keys)
   })
 }

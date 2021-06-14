@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { get } from '@/utils/HttpUtils'
+import { Tooltip } from 'antd';
 import { CONNECT_LIST, DB_LIST, TABLE_LIST, VIEW_LIST } from '@/config/url/ConnectUrls'
 import { TableOutlined, DatabaseOutlined, EyeOutlined, ConsoleSqlOutlined } from '@ant-design/icons'
 import { ViewType } from '@/constant/Enums'
@@ -10,7 +11,7 @@ const cssObj = require('@/Component/css/MainTabs.less').default
 
 interface DataNode {
   /** 标题 */
-  title: String,
+  title: string,
   /** 连接信息 */
   connectMsg: ConnectMessage,
   /** 图标 */
@@ -29,7 +30,7 @@ class DefaultTab extends React.Component<any, DataState> {
   constructor(props: any) {
     super(props)
     // 监听当前数据连接字段，改变是触发数据更新
-    subscribeForOne(() => { this.loadData() }, 'nowType', 'nowUsedConnect')
+    subscribeForOne(this.loadData, 'nowType', 'nowUsedConnect')
   }
 
   state: DataState = {
@@ -39,10 +40,13 @@ class DefaultTab extends React.Component<any, DataState> {
   render() {
     return <div className={cssObj['default-panel']}>
       {this.state.data.map(it => (
-        <div>
-          {it.icon}
-          {it.title}
-        </div>
+        <Tooltip title={it.title} key={it.title}>
+          <div key={it.title} className={cssObj['item-nav']}>
+            {it.icon}
+            <span>{it.title}</span>
+          </div>
+        </Tooltip>
+
       ))}
     </div>
   }
@@ -50,13 +54,16 @@ class DefaultTab extends React.Component<any, DataState> {
   /**
    * 数据加载
    */
-  loadData = () => {
-    switch (this.props.nowType) {
+  loadData = (type: String, connectMsg: ConnectMessage) => {
+    if (!type) {
+      type = this.props.nowType
+    }
+    switch (type) {
       case ViewType.TABLE:
-        this.loadTables()
+        this.loadTables(connectMsg)
         break
       case ViewType.VIEW:
-        this.loadViews()
+        this.loadViews(connectMsg)
         break
       default:
         this.setState({
@@ -68,9 +75,8 @@ class DefaultTab extends React.Component<any, DataState> {
   /**
    * 加载表
    */
-  loadTables = async () => {
+  loadTables = async (connectMsg: ConnectMessage) => {
     let tables: DataNode[] = []
-    let connectMsg = this.props.nowUsedConnect
     await get(`${TABLE_LIST}?connectId=${connectMsg?.id}&database=${connectMsg?.database}&schema=${connectMsg?.schema ? connectMsg?.schema : ''}`)
       .then((res: any) => {
         if (res.code === 200) {
@@ -93,9 +99,8 @@ class DefaultTab extends React.Component<any, DataState> {
   /**
    * 加载视图
    */
-  loadViews = async () => {
+  loadViews = async (connectMsg: ConnectMessage) => {
     let views: DataNode[] = []
-    let connectMsg = this.props.nowUsedConnect
     await get(`${VIEW_LIST}?connectId=${connectMsg?.id}&database=${connectMsg?.database}&schema=${connectMsg?.schema ? connectMsg?.schema : ''}`)
       .then((res: any) => {
         if (res.code === 200) {

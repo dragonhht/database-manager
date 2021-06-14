@@ -34,6 +34,7 @@ enum NodeType {
 const TABLE_TYPE = [NodeType.TABLE, NodeType.TABLE_PARENT]
 const VIEW_TYPE = [NodeType.VIEW, NodeType.VIEW_PARENT]
 const SCRIPT_TYPE = [NodeType.SCRIPT, NodeType.SCRIPT_PARENT]
+const TAB_TYPE = [NodeType.TABLE, NodeType.VIEW, NodeType.SCRIPT]
 
 /** 树节点 */
 interface DataNode {
@@ -107,6 +108,11 @@ class ConnectTree extends React.Component<any, TreeState> {
       actionCreator.changeNowType(ViewType.SCRIPT)
     } else {
       actionCreator.changeNowType(ViewType.NULL)
+    }
+    if (TAB_TYPE.includes(node.type)) {
+      actionCreator.changeNowHandlerName(node.title)
+      // 设置页签修改状态
+      actionCreator.changeTabIndex()
     }
   }
 

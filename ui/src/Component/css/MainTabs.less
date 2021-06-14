@@ -1,5 +1,20 @@
 .default-panel {
   width: 100%;
   height:calc(100vh - 150px);
-  background-color: #DEDEDE;
+  background-color: #FFF;
+  overflow-x: auto;
+}
+
+.item-nav {
+  float: left;
+  width: 200px;
+  margin-right: 10px;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+
+  span {
+    margin-left: 5px;
+  }
 }
