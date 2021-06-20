@@ -42,3 +42,23 @@ func GetVal(val interface{}) interface{} {
 		return nil
 	}
 }
+
+
+func NewQueryDataResult(result *model.DbQueryModel, total int64) model.DataResult {
+	data := model.DataResult{
+		Titles: result.Titles(),
+		Total: total,
+	}
+	if result.Data() != nil {
+		dataBody := make([][]interface{}, len(result.Data()))
+		for k, v := range result.Data() {
+			row := make([]interface{}, len(v))
+			for k1, v1 := range v {
+				row[k1] = GetVal(v1)
+			}
+			dataBody[k] = row
+		}
+		data.Data = dataBody
+	}
+	return data
+}

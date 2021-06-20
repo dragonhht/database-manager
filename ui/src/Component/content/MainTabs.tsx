@@ -5,6 +5,8 @@ import { ConnectMessage, MainTabMessage } from '@/model/model'
 import { connect } from 'react-redux'
 import { subscribeOne } from '@/store/storeUtils'
 import DefaultTab from '@/Component/content/DefaultTab'
+import TableTab from '@/Component/content/TableTab'
+import { ViewType } from '@/constant/Enums'
 
 interface MainTabsState {
   // 页签面板数组
@@ -109,7 +111,21 @@ class MainTabs extends React.Component<any, MainTabsState> {
       }
     }
     if (!exist) {
-      let panel = new MainTabMessage(name, key, connectMsg, defaultPanel)
+      let objType = ViewType.NULL
+      switch (type) {
+        case ViewType.TABLE:
+          objType = ViewType.TABLE
+          break
+        case ViewType.VIEW:
+          objType = ViewType.VIEW
+          break
+        case ViewType.SCRIPT:
+          objType = ViewType.SCRIPT
+          break
+      }
+      // TODO 脚本类型待处理
+      let content = <TableTab title={name} connectMsg={connectMsg} type={objType}></TableTab>
+      let panel = new MainTabMessage(name, key, connectMsg, content)
       let panels = this.state.panes
       panels.push(panel)
       this.setState({
